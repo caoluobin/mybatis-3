@@ -1,18 +1,19 @@
 package org.apache.ibatis.test.type;
 
 import java.io.Closeable;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 
-public class TypeVariableEg <K> {
+public class TypeVariableEg2 <K extends InputStream & Closeable> {
 
   private K a;
 
   public static void main(String[] args) {
-    Field[] declaredFields = TypeVariableEg.class.getDeclaredFields();
+    Field[] declaredFields = TypeVariableEg2.class.getDeclaredFields();
     for (Field field : declaredFields) {
       Type genericType = field.getGenericType();
       if (genericType instanceof TypeVariable<?>) {
