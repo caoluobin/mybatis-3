@@ -40,12 +40,19 @@ public class BeanWrapper extends BaseWrapper {
     this.metaClass = MetaClass.forClass(object.getClass(), metaObject.getReflectorFactory());
   }
 
+  /**
+   * @param prop
+   * @return 返回prop对应name和index的值
+   */
   @Override
   public Object get(PropertyTokenizer prop) {
+    //map[a].name
     if (prop.getIndex() != null) {
       Object collection = resolveCollection(prop, object);
+      //获取对应的Collection中的值
       return getCollectionValue(prop, collection);
     } else {
+      //值接通过method反射获取值
       return getBeanProperty(prop, object);
     }
   }
@@ -143,6 +150,9 @@ public class BeanWrapper extends BaseWrapper {
     }
   }
 
+  /**
+   * 获取prop中的Name属性创建相应Object并将值通过反射set进对应的属性 并返回相应的MetaObject
+   */
   @Override
   public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
     MetaObject metaValue;

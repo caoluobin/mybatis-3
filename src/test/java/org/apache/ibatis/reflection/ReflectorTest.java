@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.ibatis.reflection.invoker.Invoker;
+import org.apache.ibatis.test.reflection.ReT;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -320,5 +321,24 @@ class ReflectorTest {
         .hasMessageMatching(
             "Ambiguous setters defined for property 'bool' in class '" + Bean.class.getName().replace("$", "\\$")
                 + "' with types '(java.lang.Integer|boolean)' and '(java.lang.Integer|boolean)'\\.");
+  }
+
+  @Test
+  void speedTest(){
+    DefaultReflectorFactory defaultReflectorFactory=new DefaultReflectorFactory();
+    defaultReflectorFactory.setClassCacheEnabled(true);
+    long start = System.currentTimeMillis();
+    for (int i = 0; i < 10000; i++) {
+      Reflector forClass = defaultReflectorFactory.findForClass(ReT.class);
+    }
+    long end = System.currentTimeMillis();
+    System.out.println(end-start);
+    defaultReflectorFactory.setClassCacheEnabled(false);
+    long start1 = System.currentTimeMillis();
+    for (int i = 0; i < 10000; i++) {
+      Reflector forClass = defaultReflectorFactory.findForClass(ReT.class);
+    }
+    long end1 = System.currentTimeMillis();
+    System.out.println(end1-start1);
   }
 }

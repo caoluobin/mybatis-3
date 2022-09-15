@@ -42,12 +42,16 @@ public class MetaClass {
   public static MetaClass forClass(Class<?> type, ReflectorFactory reflectorFactory) {
     return new MetaClass(type, reflectorFactory);
   }
-
+  /**
+   *   获取当前类的属性的MetaClass
+   */
   public MetaClass metaClassForProperty(String name) {
     Class<?> propType = reflector.getGetterType(name);
     return MetaClass.forClass(propType, reflectorFactory);
   }
-
+  /**
+   *   忽略大小写返回属性名称
+   */
   public String findProperty(String name) {
     StringBuilder prop = buildProperty(name, new StringBuilder());
     return prop.length() > 0 ? prop.toString() : null;
@@ -60,14 +64,24 @@ public class MetaClass {
     return findProperty(name);
   }
 
+  /**
+   * @return 返回所有的get及其他属性
+   */
   public String[] getGetterNames() {
     return reflector.getGetablePropertyNames();
   }
-
+  /**
+   * @return 返回所有的set及其他属性
+   */
   public String[] getSetterNames() {
     return reflector.getSetablePropertyNames();
   }
 
+  /**
+   *
+   * @param name ret.name
+   * @return 返回最后的set属性 如Ret.name 返回String
+   */
   public Class<?> getSetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -78,6 +92,11 @@ public class MetaClass {
     }
   }
 
+  /**
+   *
+   * @param name 如ret.name 为String
+   * @return 返回值类型
+   */
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -97,6 +116,7 @@ public class MetaClass {
     Class<?> type = reflector.getGetterType(prop.getName());
     if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {
       Type returnType = getGenericGetterType(prop.getName());
+      //参数化类型 如Map List等
       if (returnType instanceof ParameterizedType) {
         Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
         if (actualTypeArguments != null && actualTypeArguments.length == 1) {
@@ -104,6 +124,7 @@ public class MetaClass {
           if (returnType instanceof Class) {
             type = (Class<?>) returnType;
           } else if (returnType instanceof ParameterizedType) {
+            //返回当前类型 如Map
             type = (Class<?>) ((ParameterizedType) returnType).getRawType();
           }
         }
