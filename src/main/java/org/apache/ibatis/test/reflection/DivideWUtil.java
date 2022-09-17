@@ -39,6 +39,6 @@ public class DivideWUtil<T> {
     reT.setStatus(1);
     reT.setName("1233");
     divideWUtil.divideW(reT,ReT.class,new BigDecimal(10));
-    System.out.println(reT.getA());
+    System.out.println(reT);
   }
 }

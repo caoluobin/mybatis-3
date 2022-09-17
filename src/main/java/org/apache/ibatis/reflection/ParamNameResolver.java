@@ -31,6 +31,9 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+/*
+用于解析方法参数名及@Param注解相关信息
+ */
 public class ParamNameResolver {
 
   public static final String GENERIC_NAME_PREFIX = "param";
@@ -49,6 +52,8 @@ public class ParamNameResolver {
    * <li>aMethod(int a, int b) -&gt; {{0, "0"}, {1, "1"}}</li>
    * <li>aMethod(int a, RowBounds rb, int b) -&gt; {{0, "0"}, {2, "1"}}</li>
    * </ul>
+   * index 与 参数名的映射 如果有Param注解则使用param注解中的名称 如果没有注解且useActualParamName为true（默认）
+   * 则使用实际名称否则使用排序1234
    */
   private final SortedMap<Integer, String> names;
 

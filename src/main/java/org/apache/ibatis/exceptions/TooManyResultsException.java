@@ -38,3 +38,4 @@ public class TooManyResultsException extends PersistenceException {
     super(cause);
   }
 }
+
