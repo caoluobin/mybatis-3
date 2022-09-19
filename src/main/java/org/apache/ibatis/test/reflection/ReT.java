@@ -9,4 +9,5 @@ public class ReT {
   private String name;
   private Long phid;
   private Integer status;
+  private Re re;
 }

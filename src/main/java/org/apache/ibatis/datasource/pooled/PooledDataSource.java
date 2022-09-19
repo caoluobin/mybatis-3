@@ -386,14 +386,20 @@ public class PooledDataSource implements DataSource {
 
     lock.lock();
     try {
+      //从活跃连接移除
       state.activeConnections.remove(conn);
+      //如果是有效连接
       if (conn.isValid()) {
+        //如果空闲连接小于最大值  且连接编码正确
         if (state.idleConnections.size() < poolMaximumIdleConnections && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
+          //累计检查时间
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
           if (!conn.getRealConnection().getAutoCommit()) {
             conn.getRealConnection().rollback();
           }
+          // 为什么这里要创建新的 PooledConnection 对象呢？避免使用方还在使用 conn ，通过将它设置为失效，万一再次调用，会抛出异常
           PooledConnection newConn = new PooledConnection(conn.getRealConnection(), this);
+          //往空闲连接中增加新连接
           state.idleConnections.add(newConn);
           newConn.setCreatedTimestamp(conn.getCreatedTimestamp());
           newConn.setLastUsedTimestamp(conn.getLastUsedTimestamp());
@@ -433,6 +439,7 @@ public class PooledDataSource implements DataSource {
     while (conn == null) {
       lock.lock();
       try {
+        //如果空闲连接不为空
         if (!state.idleConnections.isEmpty()) {
           // Pool has available connection
           conn = state.idleConnections.remove(0);
@@ -441,6 +448,7 @@ public class PooledDataSource implements DataSource {
           }
         } else {
           // Pool does not have available connection
+          //如果活跃连接小于最大活跃连接
           if (state.activeConnections.size() < poolMaximumActiveConnections) {
             // Can create new connection
             conn = new PooledConnection(dataSource.getConnection(), this);
@@ -451,14 +459,18 @@ public class PooledDataSource implements DataSource {
             // Cannot create new connection
             PooledConnection oldestActiveConnection = state.activeConnections.get(0);
             long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
+            //如果超时
             if (longestCheckoutTime > poolMaximumCheckoutTime) {
               // Can claim overdue connection
               state.claimedOverdueConnectionCount++;
               state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;
               state.accumulatedCheckoutTime += longestCheckoutTime;
+              //从活跃连接中移除该连接
               state.activeConnections.remove(oldestActiveConnection);
+              //如果该连接不是自动提交的
               if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
                 try {
+                  //回滚
                   oldestActiveConnection.getRealConnection().rollback();
                 } catch (SQLException e) {
                   /*
