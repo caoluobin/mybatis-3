@@ -113,6 +113,11 @@ public class Reflector {
     resolveGetterConflicts(conflictingGetters);
   }
 
+  /**
+   * 两个方法如果返回一样且不为bolean则抛异常 如果返回一样且为boolean则取is开头的方法
+   * 如果返回不一样 则取子类
+   * @param conflictingGetters
+   */
   private void resolveGetterConflicts(Map<String, List<Method>> conflictingGetters) {
     for (Entry<String, List<Method>> entry : conflictingGetters.entrySet()) {
       Method winner = null;

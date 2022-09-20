@@ -4,11 +4,10 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaClass;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class A {
+public class ParameterAnnotationEg {
 
 
   private String a;
@@ -19,14 +18,14 @@ public class A {
 
   public static void main(String[] args) {
     try {
-      Method getA = A.class.getDeclaredMethod("getA", String.class, List.class, Long.class);
+      Method getA = ParameterAnnotationEg.class.getDeclaredMethod("getA", String.class, List.class, Long.class);
 //      Annotation[][] parameterAnnotations = getA.getParameterAnnotations();
 //      for (int index = 0; index < parameterAnnotations.length; index++) {
 //        for (Annotation annotation : parameterAnnotations[index]) {
 //          System.out.println(annotation);
 //        }
 //      }
-      MetaClass metaClass = MetaClass.forClass(A.class, new DefaultReflectorFactory());
+      MetaClass metaClass = MetaClass.forClass(ParameterAnnotationEg.class, new DefaultReflectorFactory());
       String[] getterNames = metaClass.getGetterNames();
       System.out.println(metaClass.hasSetter("a"));
     } catch (NoSuchMethodException e) {

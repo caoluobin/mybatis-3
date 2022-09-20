@@ -59,19 +59,20 @@ public class DivideWUtilTest {
     DivideWUtil<ReT> divideWUtil = new DivideWUtil<>();
     long start =System.currentTimeMillis();
     BigDecimal bigDecimal = new BigDecimal(1);
-    for (int i = 0; i < 10000000; i++) {
+    int count = 10000000;
+    for (int i = 0; i < count; i++) {
       divideWUtil.divideWByReflector(reT,ReT.class,bigDecimal);
     }
     long end =System.currentTimeMillis();
     System.out.println(end-start);
     start =System.currentTimeMillis();
-    for (int i = 0; i < 10000000; i++) {
+    for (int i = 0; i < count; i++) {
       divideWUtil.divideWByReflectorAndName(reT,ReT.class,bigDecimal,"a");
     }
     end =System.currentTimeMillis();
     System.out.println(end-start);
     start =System.currentTimeMillis();
-    for (int i = 0; i < 10000000; i++) {
+    for (int i = 0; i < count; i++) {
       divideWUtil.divideWDefault(reT,ReT.class,bigDecimal);
     }
     end =System.currentTimeMillis();
