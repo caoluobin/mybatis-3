@@ -220,12 +220,19 @@ public class UnpooledDataSource implements DataSource {
   }
 
   private Connection doGetConnection(Properties properties) throws SQLException {
+    //注册driver
     initializeDriver();
+    //获取连接
     Connection connection = DriverManager.getConnection(url, properties);
+    //向connection设置defaultNetworkTimeout、autoCommit、defaultTransactionIsolationLevel等信息
     configureConnection(connection);
     return connection;
   }
 
+  /**
+   * 如果registeredDrivers中不含driver，则将driver加入registeredDrivers并在DriverManager中注册
+   * @throws SQLException
+   */
   private synchronized void initializeDriver() throws SQLException {
     if (!registeredDrivers.containsKey(driver)) {
       Class<?> driverType;
