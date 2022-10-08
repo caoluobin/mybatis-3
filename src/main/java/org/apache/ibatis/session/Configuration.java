@@ -157,6 +157,7 @@ public class Configuration {
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
       .conflictMessageProducer((savedValue, targetValue) ->
           ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
+  /* KEY：命名空间 namespace*/
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
@@ -755,7 +756,9 @@ public class Configuration {
 
   public void addResultMap(ResultMap rm) {
     resultMaps.put(rm.getId(), rm);
+    // 遍历全局的 ResultMap 集合，若其拥有 Discriminator 对象，则判断是否强制标记为有内嵌的 ResultMap
     checkLocallyForDiscriminatedNestedResultMaps(rm);
+    // 若传入的 ResultMap 不存在内嵌 ResultMap 并且有 Discriminator ，则判断是否需要强制表位有内嵌的 ResultMap
     checkGloballyForDiscriminatedNestedResultMaps(rm);
   }
 

@@ -69,6 +69,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     boolean resultOrdered = context.getBooleanAttribute("resultOrdered", false);
 
     // Include Fragments before parsing
+    //创建 XMLIncludeTransformer 对象，并替换 <include /> 标签相关的内容
     XMLIncludeTransformer includeParser = new XMLIncludeTransformer(configuration, builderAssistant);
     includeParser.applyIncludes(context.getNode());
 
@@ -76,9 +77,11 @@ public class XMLStatementBuilder extends BaseBuilder {
     Class<?> parameterTypeClass = resolveClass(parameterType);
 
     String lang = context.getStringAttribute("lang");
+    //获得 lang 对应的 LanguageDriver 对象
     LanguageDriver langDriver = getLanguageDriver(lang);
 
     // Parse selectKey after includes and remove them.
+    //解析 <selectKey /> 标签
     processSelectKeyNodes(id, parameterTypeClass, langDriver);
 
     // Parse the SQL (pre: <selectKey> and <include> were parsed and removed)

@@ -82,6 +82,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
     this.currentNamespace = currentNamespace;
   }
 
+  /**
+   * 解析返回currentNamespace+"."+base的形式
+   * @param base
+   * @param isReference 如果是true且base含.则直接返回
+   * @return
+   */
   public String applyCurrentNamespace(String base, boolean isReference) {
     if (base == null) {
       return null;
@@ -103,6 +109,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return currentNamespace + "." + base;
   }
 
+  /**
+   * 通过namespace从configuration获取cache并赋值给currentCache
+   * @param namespace
+   * @return
+   */
   public Cache useCacheRef(String namespace) {
     if (namespace == null) {
       throw new BuilderException("cache-ref element requires a namespace attribute.");
@@ -121,6 +132,17 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
   }
 
+  /**
+   * 生成新cache放入configuration中 key:id为currentNamespace
+   * @param typeClass
+   * @param evictionClass
+   * @param flushInterval
+   * @param size
+   * @param readWrite
+   * @param blocking
+   * @param props
+   * @return
+   */
   public Cache useNewCache(Class<? extends Cache> typeClass,
       Class<? extends Cache> evictionClass,
       Long flushInterval,
@@ -142,6 +164,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return cache;
   }
 
+  /**
+   * 构造ParameterMap放入configuration并返回  并通过Collections.unmodifiableList方法使parameterMappings不可变
+   * @param id
+   * @param parameterClass
+   * @param parameterMappings
+   * @return
+   */
   public ParameterMap addParameterMap(String id, Class<?> parameterClass, List<ParameterMapping> parameterMappings) {
     id = applyCurrentNamespace(id, false);
     ParameterMap parameterMap = new ParameterMap.Builder(configuration, id, parameterClass, parameterMappings).build();
@@ -149,6 +178,18 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return parameterMap;
   }
 
+  /**
+   * 返回ParameterMapping
+   * @param parameterType
+   * @param property
+   * @param javaType
+   * @param jdbcType
+   * @param resultMap
+   * @param parameterMode
+   * @param typeHandler
+   * @param numericScale
+   * @return
+   */
   public ParameterMapping buildParameterMapping(
       Class<?> parameterType,
       String property,

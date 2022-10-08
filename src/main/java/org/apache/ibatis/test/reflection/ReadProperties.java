@@ -51,7 +51,7 @@ public class ReadProperties {
   }
   public static void main(String[] args) {
     File file = new File(".");
-    String path="D:\\zysj\\JAVAPROJECT\\mybatis-3\\src\\test\\java\\test.properties";
+    String path="E:\\JavaProject\\mybatis-3\\src\\test\\java\\test.properties";
     Object o = propertiesToObject(path, new ReT());
     System.out.println(o);
   }

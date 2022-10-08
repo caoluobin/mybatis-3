@@ -53,14 +53,17 @@ import org.apache.ibatis.session.Configuration;
  * @author Kazuki Shimizu
  */
 public final class TypeHandlerRegistry {
-
+  //JDBC Type 和 {@link TypeHandler} 的映射
   private final Map<JdbcType, TypeHandler<?>> jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
+  //
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
   private final TypeHandler<Object> unknownTypeHandler;
+  //所有 TypeHandler 的“集合”
   private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
+  //空 TypeHandler 集合的标识，即使 {@link #TYPE_HANDLER_MAP} 中，某个 KEY1 对应的 Map<JdbcType, TypeHandler<?>> 为空
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
-
+  //默认的枚举类型的 TypeHandler 对象
   private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
 
   /**

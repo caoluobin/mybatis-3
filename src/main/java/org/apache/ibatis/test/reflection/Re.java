@@ -7,4 +7,5 @@ import java.math.BigDecimal;
 @Data
 public class Re {
   private BigDecimal amount;
+  private String  name;
 }

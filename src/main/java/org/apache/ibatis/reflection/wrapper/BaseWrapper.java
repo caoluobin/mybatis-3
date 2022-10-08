@@ -34,7 +34,7 @@ public abstract class BaseWrapper implements ObjectWrapper {
     this.metaObject = metaObject;
   }
 
-  //获取object对应属性的值
+  //获取object对应属性的值a[0].b
   protected Object resolveCollection(PropertyTokenizer prop, Object object) {
     if ("".equals(prop.getName())) {
       return object;

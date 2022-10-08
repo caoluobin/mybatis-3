@@ -1,4 +1,4 @@
-package org.apache.ibatis.test.datasource;
+package org.apache.ibatis.datasource.datasource;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;

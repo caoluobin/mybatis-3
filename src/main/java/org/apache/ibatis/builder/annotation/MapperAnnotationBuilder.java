@@ -115,10 +115,15 @@ public class MapperAnnotationBuilder {
   public void parse() {
     String resource = type.toString();
     if (!configuration.isResourceLoaded(resource)) {
+      //加载对应Mapper.xml
       loadXmlResource();
+      //标记改Mapper接口已被加载
       configuration.addLoadedResource(resource);
+      //更换命名空间
       assistant.setCurrentNamespace(type.getName());
+      //解析 @CacheNamespace 注解
       parseCache();
+      //解析 @CacheNamespaceRef 注解
       parseCacheRef();
       for (Method method : type.getMethods()) {
         if (!canHaveStatement(method)) {

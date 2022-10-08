@@ -91,16 +91,21 @@ public class CacheBuilder {
 
   public Cache build() {
     setDefaultImplementations();
+    //通过Class:implementation的带单String参数:id构造器创建Cache对象
     Cache cache = newBaseCacheInstance(implementation, id);
+    //将properties中的数据存入cache中
     setCacheProperties(cache);
     // issue #352, do not apply decorators to custom caches
     if (PerpetualCache.class.equals(cache.getClass())) {
+      //添加装饰功能
       for (Class<? extends Cache> decorator : decorators) {
         cache = newCacheDecoratorInstance(decorator, cache);
         setCacheProperties(cache);
       }
+      //设置size、clearInterval、readWrite、blocking等选择属性及log、synchronized必选属性
       cache = setStandardDecorators(cache);
-    } else if (!LoggingCache.class.isAssignableFrom(cache.getClass())) {
+    } else if (!LoggingCache.class.isAssignableFrom(cache.getClass())) {//如果不是LoggingCache的子类
+      //使用LoggingCache装饰cache
       cache = new LoggingCache(cache);
     }
     return cache;

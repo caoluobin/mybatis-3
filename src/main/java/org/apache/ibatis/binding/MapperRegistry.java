@@ -100,6 +100,7 @@ public class MapperRegistry {
    */
   public void addMappers(String packageName, Class<?> superType) {
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
+    //找到packageName包下是superType及其子类的所有class
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
     Set<Class<? extends Class<?>>> mapperSet = resolverUtil.getClasses();
     for (Class<?> mapperClass : mapperSet) {
