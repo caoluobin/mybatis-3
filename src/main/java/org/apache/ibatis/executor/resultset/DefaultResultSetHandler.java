@@ -316,19 +316,25 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults, ResultMapping parentMapping) throws SQLException {
     try {
+      //存储过程的情况，调用该方法，parentMapping 为非空
       if (parentMapping != null) {
         handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
       } else {
+        //如果没有自定义的 resultHandler ，则创建默认的 DefaultResultHandler 对象
         if (resultHandler == null) {
           DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
+          //处理 ResultSet 返回的每一行 Row
           handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);
+          //添加 defaultResultHandler 的处理的结果，到 multipleResults 中
           multipleResults.add(defaultResultHandler.getResultList());
         } else {
+          //处理 ResultSet 返回的每一行 Row
           handleRowValues(rsw, resultMap, resultHandler, rowBounds, null);
         }
       }
     } finally {
       // issue #228 (close resultsets)
+      // 关闭 ResultSet 对象
       closeResultSet(rsw.getResultSet());
     }
   }
@@ -343,11 +349,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   public void handleRowValues(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
+    // 处理嵌套映射的情况
     if (resultMap.hasNestedResultMaps()) {
+      // 校验不要使用 RowBounds
       ensureNoRowBounds();
+      //校验不要使用自定义的 resultHandler
       checkResultHandler();
+      // 处理嵌套映射的结果
       handleRowValuesForNestedResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);
     } else {
+      // 处理嵌套映射的结果
       handleRowValuesForSimpleResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);
     }
   }
@@ -369,12 +380,18 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void handleRowValuesForSimpleResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping)
       throws SQLException {
+    // 创建 DefaultResultContext 对象
     DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
+    //获得 ResultSet 对象，并跳到 rowBounds 指定的开始位置
     ResultSet resultSet = rsw.getResultSet();
     skipRows(resultSet, rowBounds);
-    while (shouldProcessMoreRows(resultContext, rowBounds) && !resultSet.isClosed() && resultSet.next()) {
+    while (shouldProcessMoreRows(resultContext, rowBounds)// 是否继续处理 ResultSet
+      && !resultSet.isClosed() && resultSet.next()) {
+      //根据该行记录以及 ResultMap.discriminator ，决定映射使用的 ResultMap 对象
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(resultSet, resultMap, null);
+      //根据最终确定的 ResultMap 对 ResultSet 中的该行记录进行映射，得到映射后的结果对象
       Object rowValue = getRowValue(rsw, discriminatedResultMap, null);
+      //将映射创建的结果对象添加到 ResultHandler.resultList 中保存
       storeObject(resultHandler, resultContext, rowValue, parentMapping, resultSet);
     }
   }
