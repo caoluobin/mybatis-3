@@ -27,6 +27,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 动态 SQL ，用于每次执行 SQL 操作时，记录动态 SQL 处理后的最终 SQL 字符串。
  * @author Clinton Begin
  */
 public class DynamicContext {
@@ -74,6 +75,7 @@ public class DynamicContext {
     return uniqueNumber++;
   }
 
+  //拓展map 如果基础map中没有还可从parameterMetaObject中获取值
   static class ContextMap extends HashMap<String, Object> {
     private static final long serialVersionUID = 2977601501966151582L;
     private final MetaObject parameterMetaObject;
@@ -106,6 +108,13 @@ public class DynamicContext {
 
   static class ContextAccessor implements PropertyAccessor {
 
+    /**
+     * 从(Map)target中获取name的数据 如果没有先获取_parameter的数据map再从中获取name的数据
+     * @param context
+     * @param target
+     * @param name
+     * @return
+     */
     @Override
     public Object getProperty(Map context, Object target, Object name) {
       Map map = (Map) target;

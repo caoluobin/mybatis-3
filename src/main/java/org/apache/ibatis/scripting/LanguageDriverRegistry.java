@@ -21,10 +21,13 @@ import java.util.Map;
 import org.apache.ibatis.util.MapUtil;
 
 /**
+ * LanguageDriver 工厂类
  * @author Frank D. Martinez [mnesarco]
  */
 public class LanguageDriverRegistry {
-
+  /**
+   * LanguageDriver实例保存map
+   */
   private final Map<Class<? extends LanguageDriver>, LanguageDriver> LANGUAGE_DRIVER_MAP = new HashMap<>();
 
   private Class<? extends LanguageDriver> defaultDriverClass;

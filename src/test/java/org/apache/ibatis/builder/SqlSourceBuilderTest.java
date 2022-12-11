@@ -26,7 +26,7 @@ public class SqlSourceBuilderTest {
 
   private static Configuration configuration;
   private static SqlSourceBuilder sqlSourceBuilder;
-  private final String sqlFromXml = "\t\n\n  SELECT * \n        FROM user\n \t        WHERE user_id = 1\n\t  ";
+  private final String sqlFromXml = "\t\n\n  SELECT * \n        FROM user\n \t        WHERE user_id = 1\n\t and age =#{age,javaType=int,jdbcType=NUMERIC,typeHandler=MyTypeHandler}  ";
 
   @BeforeEach
   void setUp() {

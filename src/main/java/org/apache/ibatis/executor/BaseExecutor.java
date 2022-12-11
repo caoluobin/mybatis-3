@@ -54,8 +54,11 @@ public abstract class BaseExecutor implements Executor {
   protected Transaction transaction;
   protected Executor wrapper;
 
+  //延迟加载队列
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
+  //本地缓存，即一级缓存
   protected PerpetualCache localCache;
+  //本地输出类型的参数的缓存
   protected PerpetualCache localOutputParameterCache;
   protected Configuration configuration;
 
@@ -118,6 +121,9 @@ public abstract class BaseExecutor implements Executor {
   }
 
   @Override
+  /**
+   * 刷入批处理语句
+   */
   public List<BatchResult> flushStatements() throws SQLException {
     return flushStatements(false);
   }
@@ -159,11 +165,13 @@ public abstract class BaseExecutor implements Executor {
       queryStack--;
     }
     if (queryStack == 0) {
+      //  执行延迟加载
       for (DeferredLoad deferredLoad : deferredLoads) {
         deferredLoad.load();
       }
-      // issue #601
+      // 清空 deferredLoads
       deferredLoads.clear();
+      //如果缓存级别是 LocalCacheScope.STATEMENT ，则进行清理
       if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
         // issue #482
         clearLocalCache();
@@ -289,7 +297,7 @@ public abstract class BaseExecutor implements Executor {
 
   /**
    * Apply a transaction timeout.
-   *
+   * // 设置事务超时时间
    * @param statement
    *          a current statement
    * @throws SQLException
@@ -320,13 +328,18 @@ public abstract class BaseExecutor implements Executor {
 
   private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
+    // <1> 在缓存中，添加占位对象。此处的占位符，和延迟加载有关，可见 `DeferredLoad#canLoad()` 方法
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
+      // <2> 执行读操作
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     } finally {
+      // <3> 从缓存中，移除占位对象
       localCache.removeObject(key);
     }
+    // <4> 添加到缓存中
     localCache.putObject(key, list);
+    // 存储过程相关
     if (ms.getStatementType() == StatementType.CALLABLE) {
       localOutputParameterCache.putObject(key, parameter);
     }

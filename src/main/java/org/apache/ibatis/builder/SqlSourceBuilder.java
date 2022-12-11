@@ -88,6 +88,11 @@ public class SqlSourceBuilder extends BaseBuilder {
       return "?";
     }
 
+    /**
+     *
+     * @param content 例 #{age,javaType=int,jdbcType=NUMERIC,typeHandler=MyTypeHandler}
+     * @return
+     */
     private ParameterMapping buildParameterMapping(String content) {
       Map<String, String> propertiesMap = parseParameterMapping(content);
       String property = propertiesMap.get("property");

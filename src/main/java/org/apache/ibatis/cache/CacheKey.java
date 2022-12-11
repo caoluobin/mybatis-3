@@ -73,11 +73,12 @@ public class CacheKey implements Cloneable, Serializable {
     int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object);
 
     count++;
+    // checksum 为 baseHashCode 的求和
     checksum += baseHashCode;
+    // 计算新的 hashcode 值
     baseHashCode *= count;
-
     hashcode = multiplier * hashcode + baseHashCode;
-
+  // 添加 object 到 updateList 中
     updateList.add(object);
   }
 
