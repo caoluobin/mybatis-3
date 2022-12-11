@@ -17,6 +17,7 @@ package org.apache.ibatis.reflection;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ibatis.util.MapUtil;
 
