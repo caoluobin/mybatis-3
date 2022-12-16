@@ -131,9 +131,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       environmentsElement(root.evalNode("environments"));
       //解析 <databaseIdProvider /> 标签
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
-      //解析 <databaseIdProvider /> 标签
+      //解析 <typeHandlers /> 标签
       typeHandlerElement(root.evalNode("typeHandlers"));
-      //解析 <databaseIdProvider /> 标签
+      //解析 <mappers /> 标签
       mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
