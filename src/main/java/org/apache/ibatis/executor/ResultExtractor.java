@@ -36,8 +36,10 @@ public class ResultExtractor {
 
   public Object extractObjectFromList(List<Object> list, Class<?> targetType) {
     Object value = null;
+    // targetType 就是 list ，直接返回
     if (targetType != null && targetType.isAssignableFrom(list.getClass())) {
       value = list;
+      // targetType 就是 集合 ，将list添加进行返回
     } else if (targetType != null && objectFactory.isCollection(targetType)) {
       value = objectFactory.create(targetType);
       MetaObject metaObject = configuration.newMetaObject(value);
@@ -53,7 +55,7 @@ public class ResultExtractor {
       } else {
         value = list.toArray((Object[])array);
       }
-    } else {
+    } else {// targetType 就是普通对象 ，获取list第一个返回
       if (list != null && list.size() > 1) {
         throw new ExecutorException("Statement returned more than one row, where no more than one was expected.");
       } else if (list != null && list.size() == 1) {
