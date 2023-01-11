@@ -16,7 +16,7 @@ public class GenericArrayTypeEg<T> {
     Field[] declaredFields = GenericArrayTypeEg.class.getDeclaredFields();
     for (Field declaredField : declaredFields) {
       Type genericType = declaredField.getGenericType();
-      if (genericType instanceof GenericArrayType) {
+      if (genericType instanceof GenericArrayType) {//泛型数组
         GenericArrayType genericArrayType=(GenericArrayType) genericType;
         Type genericComponentType = genericArrayType.getGenericComponentType();
         System.out.println(declaredField.getName()+"======>"+genericComponentType.getTypeName());

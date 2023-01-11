@@ -49,7 +49,9 @@ public class PooledDataSource implements DataSource {
   private final UnpooledDataSource dataSource;
 
   // OPTIONAL CONFIGURATION FIELDS
+  /**最大活跃连接数*/
   protected int poolMaximumActiveConnections = 10;
+  /**最大空闲连接数*/
   protected int poolMaximumIdleConnections = 5;
   protected int poolMaximumCheckoutTime = 20000;
   protected int poolTimeToWait = 20000;
@@ -382,6 +384,11 @@ public class PooledDataSource implements DataSource {
     return ("" + url + username + password).hashCode();
   }
 
+  /**
+   * 将使用完的连接放回连接池中
+   * @param conn
+   * @throws SQLException
+   */
   protected void pushConnection(PooledConnection conn) throws SQLException {
 
     lock.lock();
@@ -557,7 +564,7 @@ public class PooledDataSource implements DataSource {
 
   /**
    * Method to check to see if a connection is still usable
-   *
+   * 判断数据库连接是否有效
    * @param conn
    *          - the connection to check
    * @return True if the connection is still usable
@@ -573,7 +580,7 @@ public class PooledDataSource implements DataSource {
       }
       result = false;
     }
-
+    // 是否开启侦查  且   判断是否长时间未使用。若是，才需要发起 ping
     if (result && poolPingEnabled && poolPingConnectionsNotUsedFor >= 0
         && conn.getTimeElapsedSinceLastUse() > poolPingConnectionsNotUsedFor) {
       try {

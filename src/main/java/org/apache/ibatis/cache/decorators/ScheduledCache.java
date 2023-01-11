@@ -21,6 +21,7 @@ import org.apache.ibatis.cache.Cache;
 
 /**
  * @author Clinton Begin
+ * 定时清理cache
  */
 public class ScheduledCache implements Cache {
 

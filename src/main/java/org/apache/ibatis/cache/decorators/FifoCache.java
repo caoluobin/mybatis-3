@@ -22,7 +22,7 @@ import org.apache.ibatis.cache.Cache;
 
 /**
  * FIFO (first in, first out) cache decorator.
- *
+ * 1024容量 当超过此容量时 最先保存的key会被移除
  * @author Clinton Begin
  */
 public class FifoCache implements Cache {

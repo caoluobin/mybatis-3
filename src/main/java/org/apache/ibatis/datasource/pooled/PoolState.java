@@ -25,7 +25,13 @@ public class PoolState {
 
   protected PooledDataSource dataSource;
 
+  /**
+   * 空闲连接
+   */
   protected final List<PooledConnection> idleConnections = new ArrayList<>();
+  /**
+   * 活跃连接
+   */
   protected final List<PooledConnection> activeConnections = new ArrayList<>();
   /**
    * 全局统计 - 获取连接的次数
@@ -37,7 +43,6 @@ public class PoolState {
   protected long accumulatedRequestTime = 0;
   /**
    * 全局统计 - 获取到连接非超时 + 超时的占用时长
-   *
    * 所以，包括 {@link #accumulatedCheckoutTimeOfOverdueConnections} 部分
    */
   protected long accumulatedCheckoutTime = 0;

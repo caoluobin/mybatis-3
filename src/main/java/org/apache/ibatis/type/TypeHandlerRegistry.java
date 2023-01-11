@@ -55,7 +55,7 @@ import org.apache.ibatis.session.Configuration;
 public final class TypeHandlerRegistry {
   //JDBC Type 和 {@link TypeHandler} 的映射
   private final Map<JdbcType, TypeHandler<?>> jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
-  //
+  //javaType-->JdbcType-->TypeHandler
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
   private final TypeHandler<Object> unknownTypeHandler;
   //所有 TypeHandler 的“集合”

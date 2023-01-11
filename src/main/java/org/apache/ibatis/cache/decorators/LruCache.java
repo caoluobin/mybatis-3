@@ -22,7 +22,7 @@ import org.apache.ibatis.cache.Cache;
 
 /**
  * Lru (least recently used) cache decorator.
- *
+ * 当到达容量极限时  会删除最早的key
  * @author Clinton Begin
  */
 public class LruCache implements Cache {
