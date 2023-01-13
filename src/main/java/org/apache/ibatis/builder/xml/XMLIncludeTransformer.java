@@ -72,8 +72,10 @@ public class XMLIncludeTransformer {
       }
       toInclude.getParentNode().removeChild(toInclude);
     } else if (source.getNodeType() == Node.ELEMENT_NODE) {
+      //如果是include标签内的标签
       if (included && !variablesContext.isEmpty()) {
         // replace variables in attribute values
+        //替换属性
         NamedNodeMap attributes = source.getAttributes();
         for (int i = 0; i < attributes.getLength(); i++) {
           Node attr = attributes.item(i);
